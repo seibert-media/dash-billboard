@@ -1,0 +1,4 @@
+# chesen
+SUBSYSTEM=="usb", ATTR{idVendor}=="0a81", ATTR{idProduct}=="0701", GROUP="games"
+# thunder
+SUBSYSTEM=="usb", ATTR{idVendor}=="2123", ATTR{idProduct}=="1010", GROUP="games"

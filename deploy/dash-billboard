@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#
+# This script starts the ci dashboard display aswell as the rocket
+# launcher control.
+#
+# Is is usually started by the X xession manager of the debian raspberry pi.
+#
+# Midori must be installed, the scripts and display is optimized for this
+# browser. Please make sure that the display/
+#
+# Python must also be installed with the required usb libraries. Please
+# make sure that the rocket/setup.sh skript has been run.
+#
+
+BROWSER=midori
+
+if ! which $BROWSER ; then
+  echo "${BROWSER} not installed, please run setup_display.sh, exiting."
+  exit -1
+fi
+
+echo "Attention! Shutting down computer after ${BROWSER} has ended."
+echo "Place a 'nohalt' file in the home directory to prevent it."
+
+echo "Disabling screensaver."
+xset s off
+xset s noblank
+xset -dpms
+
+echo "Forking off rocket control."
+cd $HOME/dash-billboard/rocket
+# Use -u so python will flush the ouput ... oh boy
+nohup python -u zuechtigen.py stalk > $HOME/zuechtigen.log 2>&1 &
+
+echo "Starting dashboard display."
+
+cd $HOME/dash-billboard/display
+
+$BROWSER index.html
+if [ ! -f $HOME/nohalt ]; then
+  echo "Browser was closed, halting the system."
+  sudo halt
+else
+  echo "Browser was closed, not halting because of ~/nohalt file."
+fi
+
