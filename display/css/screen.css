@@ -82,6 +82,12 @@ body
   background-image:url('../img/building-background.png');
 }
 
+.skipped
+{
+  background-color:transparent;
+  background-image:url('../img/skipped-background.png');
+}
+
 .green
 {
   background-color:#0A0;

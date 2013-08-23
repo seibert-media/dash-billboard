@@ -45,6 +45,12 @@ $(function() {
   var statusFailure   = "red";
   var statusBuilding  = "building";
   var statusUnkown    = "gray";
+  var statusSkipped   = "skipped";
+
+  var STATUS_SUCCESS  = 3;
+  var STATUS_FAILURE  = 2;
+  var STATUS_BUILDING = 1;
+  var STATUS_SKIPPED  = 99;
 
   function log(arg) {
     if (console && console.log) {
@@ -141,15 +147,19 @@ $(function() {
   }
 
   function isJenkinsStatusSuccess(jenkinsStatus) {
-    return 3 == jenkinsStatus;
+    return STATUS_SUCCESS == jenkinsStatus;
   }
 
   function isJenkinsStatusFailure(jenkinsStatus) {
-    return 2 == jenkinsStatus;
+    return STATUS_FAILURE == jenkinsStatus;
   }
 
   function isJenkinsStatusBuilding(jenkinsStatus) {
-    return 1 == jenkinsStatus;
+    return STATUS_BUILDING == jenkinsStatus;
+  }
+
+  function isJenkinsStatusSkipped(jenkinsStatus) {
+    return STATUS_SKIPPED == jenkinsStatus;
   }
 
   function isJenkinsStatusUnkown(jenkinsStatus) {
@@ -169,6 +179,9 @@ $(function() {
     }
     else if (isJenkinsStatusBuilding(jenkinsStatus)) {
       return statusBuilding;
+    }
+    else if (isJenkinsStatusSkipped(jenkinsStatus)) {
+      return statusSkipped;
     }
     else {
       return statusUnkown;
@@ -263,9 +276,9 @@ $(function() {
                isJenkinsStatusFailure(c.stage2) ||
                isJenkinsStatusFailure(c.stage3)) {
             return statusFailure;
-      }
-    }
-    return statusUnkown;
+       }
+     }
+     return statusUnkown;
   }
 
   /* Sets the background color according to the global build status */
@@ -344,6 +357,29 @@ $(function() {
     $container.empty();
   }
 
+  function determineStatusStage1(commit) {
+    return commit.stage1;
+  }
+
+  function determineStatusStage2(commit) {
+    if (isJenkinsStatusFailure(commit.stage1)) {
+      return STATUS_SKIPPED;
+    }
+    else {
+      return commit.stage2;
+    }
+  }
+
+  function determineStatusStage3(commit) {
+    if (isJenkinsStatusFailure(commit.stage1) ||
+        isJenkinsStatusFailure(commit.stage2)) {
+      return STATUS_SKIPPED;
+    }
+    else {
+      return commit.stage3;
+    }
+  }
+
   function updateCommitList(commits) {
     clearCommitList();
 
@@ -356,9 +392,9 @@ $(function() {
         truncateUsername(commit.committer),
         jenkinsDateToText(commit.timestamp),
         commit.revision,
-        jenkinsStatusToText(commit.stage1),
-        jenkinsStatusToText(commit.stage2),
-        jenkinsStatusToText(commit.stage3)
+        jenkinsStatusToText(determineStatusStage1(commit)),
+        jenkinsStatusToText(determineStatusStage2(commit)),
+        jenkinsStatusToText(determineStatusStage3(commit))
       );
 
       /* Animation deactivated because it used too much resources
