@@ -253,6 +253,12 @@ $(function() {
     numberOfCommitsToDisplay = _calculateMaxNumberOfDisplayedCommits();
   }
 
+  function isCommitFullyTested(commit) {
+    return ! (isJenkinsStatusBuilding(commit.stage1) ||
+              isJenkinsStatusBuilding(commit.stage2) ||
+              isJenkinsStatusBuilding(commit.stage3));
+  }
+
   /* Looks a the latest commit result and determines the
    * "global build status". The status is used to display a
    * colored background of the display.
@@ -263,22 +269,26 @@ $(function() {
    * else,                             the status is: unknown
    */
   function determineGlobalBuildStatus(commits) {
-    if (commits.length > 0) {
-      var c = commits[0];
+    for (var i = 0; i < commits.length; i++) {
+      commit = commits[i];
+      if (! isCommitFullyTested(commit)) {
+        continue;
+      }
+
       /* all successfull */
-      if (isJenkinsStatusSuccess(c.stage1) &&
-          isJenkinsStatusSuccess(c.stage2) &&
-          isJenkinsStatusSuccess(c.stage3)) {
-            return statusSuccess;
+      if (isJenkinsStatusSuccess(commit.stage1) &&
+          isJenkinsStatusSuccess(commit.stage2) &&
+          isJenkinsStatusSuccess(commit.stage3)) {
+        return statusSuccess;
       }
       /* any failure */
-      else if (isJenkinsStatusFailure(c.stage1) ||
-               isJenkinsStatusFailure(c.stage2) ||
-               isJenkinsStatusFailure(c.stage3)) {
-            return statusFailure;
-       }
-     }
-     return statusUnkown;
+      else if (isJenkinsStatusFailure(commit.stage1) ||
+               isJenkinsStatusFailure(commit.stage2) ||
+               isJenkinsStatusFailure(commit.stage3)) {
+        return statusFailure;
+      }
+    }
+    return statusUnkown;
   }
 
   /* Sets the background color according to the global build status */
@@ -328,7 +338,7 @@ $(function() {
       }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
-      error("Fetch commit list: "+ textStatus +".");
+      error("Error fetching commit list: "+ errorThrown);
       scheduleRefreshCommitList();
     });
   }
