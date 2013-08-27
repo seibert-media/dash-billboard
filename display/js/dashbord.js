@@ -293,7 +293,9 @@ $(function() {
 
   /* Sets the background color according to the global build status */
   function updateGlobalBuildStatus(commits) {
-    $globalBuildStatus.removeClass(statusSuccess, statusFailure, statusUnkown);
+    $globalBuildStatus.removeClass(statusSuccess);
+    $globalBuildStatus.removeClass(statusFailure);
+    $globalBuildStatus.removeClass(statusUnkown);
     $globalBuildStatus.addClass(determineGlobalBuildStatus(commits));
   }
 
