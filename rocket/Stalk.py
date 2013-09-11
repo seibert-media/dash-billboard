@@ -30,6 +30,8 @@ class Stalk:
 
   def poll_commit_status_iteration(self):
     response_string = HTTPHelper.read_url(Config.DASHBOARD_URL)
+    # Uncomment for high debug output of the original input data
+    # Log.log("got response: "+ response_string);
     response = json.loads(response_string)
     if not "success" in response:
       Log.log("got an error from the dashboard server, ignoring")

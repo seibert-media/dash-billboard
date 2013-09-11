@@ -60,4 +60,7 @@ class Commit:
 
   def is_unkown(self):
     return self.stage1 == STATUS_UNKOWN
+
+  def is_complete(self):
+    return self.stage1 != STATUS_SUCCESS and self.stage1 != STATUS_FAIL
   

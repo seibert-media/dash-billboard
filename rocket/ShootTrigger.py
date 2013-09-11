@@ -13,12 +13,12 @@ class ShootTrigger:
   def shoot_user(self, user):
     self.callback(user)
 
-  def remove_latest_building_commits(self, commits):
+  def remove_latest_incomplete_commits(self, commits):
     reverse_commits = list(commits)
     reverse_commits.reverse()
     latest_building_commits = []
     for reverse_commit in reverse_commits:
-      if reverse_commit.is_building() or reverse_commit.is_unkown():
+      if reverse_commit.is_complete():
         latest_building_commits.append(reverse_commit)
     return [item for item in commits if item not in latest_building_commits]
   
@@ -26,7 +26,7 @@ class ShootTrigger:
     # We remove commits that are still building, but only the most recent ones
     # older ones should fall into the list of known commits and never be recognized
     # again
-    commits = self.remove_latest_building_commits(commits)
+    commits = self.remove_latest_incomplete_commits(commits)
   
     if len(commits) == 0:
       return
@@ -44,6 +44,7 @@ class ShootTrigger:
   
     # Skip already known commits
     if commit.key() in self.seen_commits:
+      Log.log("Skipping commit: " + commit.key())
       return
   
     self.seen_commits[commit.key()] = True
