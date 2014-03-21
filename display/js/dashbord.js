@@ -94,7 +94,9 @@ $(function() {
 
   /* Converts the date in form '2013-07-11_16:41:55' to a js Date object. */
   function parseJenkinsDate(jenkinsDate) {
+    if (! jenkinsDate) { return new Date(0); }
     var parts = jenkinsDate.match(/\d+/g);
+    if (parts === null) { return new Date(0); }
     parts[1] -= 1;
     return new Date(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
   }
@@ -320,7 +322,7 @@ $(function() {
        */
       log("got commit data response");
       try {
-        data = jQuery.parseJSON(data_string);
+        var data = jQuery.parseJSON(data_string);
         if (data.success && data.results instanceof Array) {
           data.results.sort(compareTimeStamps);
           data.results.reverse();
@@ -347,6 +349,8 @@ $(function() {
 
   /* Sorting comparator, sort by timestamp */
   function compareTimeStamps(a,b) {
+    if (! b) { return -1; }
+    if (! a) { return 1; }
     return parseJenkinsDate(a.timestamp) - parseJenkinsDate(b.timestamp);
   }
 
