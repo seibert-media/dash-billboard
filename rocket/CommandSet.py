@@ -1,6 +1,7 @@
 
 import Config
 import Log
+import time
 
 def has_command_set(user):
   return CommandSet.find_user_command_set(user) != None
@@ -44,6 +45,11 @@ def __run_command(device, command, value):
   command = command.lower()
   if command == "right":
     device.move_right(value)
+  elif command == "shake":
+    device.move_right(value)
+    device.move_left(value)
+    device.move_right(value)
+    device.move_left(value)
   elif command == "left":
     device.move_left(value)
   elif command == "up":

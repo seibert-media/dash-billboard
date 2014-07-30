@@ -26,7 +26,7 @@ $(function() {
   var errorMessageDisplayTimeMilliseconds = 19000;
   var refreshIntervalMilliseconds         = 20000;
   /* Defined by the space on your display */
-  var maxLengthOfUsernameInChars          = 9;
+  var maxLengthOfUsernameInChars          = 19;
 
   /* Is calculated by calculateMaxNumberOfDisplayedCommits() */
   var numberOfCommitsToDisplay            = undefined;

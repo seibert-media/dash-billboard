@@ -1,4 +1,6 @@
 
+from datetime import datetime
+
 # Commit format:
 #
 # {u'branch': u'trunk',
@@ -29,6 +31,14 @@ def cmp_map_by_revision(x, y):
   else:
       return 0
 
+def cmp_map_by_timestamp(x, y):
+  if cmp(x["timestamp"], y["timestamp"]) < 0:
+      return -1
+  elif cmp(x["timestamp"], y["timestamp"]) > 0:
+      return 1
+  else:
+      return 0
+
 STATUS_FAIL     = 2
 STATUS_SUCCESS  = 3
 STATUS_BUILDING = 1
@@ -44,23 +54,24 @@ class Commit:
     self.stage2    = stage2
     self.stage3    = stage3
     self.timestamp = timestamp
+    self.datetime  = datetime.strptime(timestamp, "%Y-%m-%d_%H:%M:%S")
 
   def key(self):
     # There may be multiple test runs for a revision
     return self.revision + self.timestamp
 
   def is_success(self):
-    return self.stage1 == STATUS_SUCCESS
+    return self.stage1 == STATUS_SUCCESS and self.stage2 == STATUS_SUCCESS
 
   def is_building(self):
-    return self.stage1 == STATUS_BUILDING
+    return self.stage1 == STATUS_BUILDING or (self.stage1 != STATUS_FAIL and self.stage2 == STATUS_BUILDING)
 
   def is_failure(self):
-    return self.stage1 == STATUS_FAIL
+    return self.stage1 == STATUS_FAIL or self.stage2 == STATUS_FAIL
 
   def is_unkown(self):
-    return self.stage1 == STATUS_UNKOWN
+    return self.stage1 == STATUS_UNKOWN or self.stage2 == STATUS_UNKOWN
 
   def is_complete(self):
-    return self.stage1 != STATUS_SUCCESS and self.stage1 != STATUS_FAIL
+    return self.stage1 == STATUS_FAIL or (self.stage1 == STATUS_SUCCESS and (self.stage2 == STATUS_FAIL or self.stage2 == STATUS_SUCCESS))
   

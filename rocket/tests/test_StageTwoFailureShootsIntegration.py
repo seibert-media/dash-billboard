@@ -12,8 +12,8 @@ read_url_answers = [
     "results" : [{
   "branch": "trunk",
   "committer": "charly",
-  "id": "17.54320.3572",
-  "revision": "54320",
+  "id": "1.1.1",
+  "revision": "1",
   "stage1": 3,
   "stage2": 3,
   "stage3": 0,
@@ -22,8 +22,8 @@ read_url_answers = [
   {
   "branch": "trunk",
   "committer": "ben",
-  "id": "17.54321.3573",
-  "revision": "54321",
+  "id": "1.2.2",
+  "revision": "2",
   "stage1": 3,
   "stage2": 3,
   "stage3": 0,
@@ -32,9 +32,9 @@ read_url_answers = [
   {
   "branch": "trunk",
   "committer": "john",
-  "id": "17.54322.3574",
-  "revision": "54322",
-  "stage1": 0,
+  "id": "1.3.3",
+  "revision": "3",
+  "stage1": 3,
   "stage2": 0,
   "stage3": 0,
   "timestamp": "2013-09-06_14:23:17"
@@ -44,8 +44,8 @@ read_url_answers = [
   """ { "success" : "true",
   "results" : [{ "branch": "trunk",
   "committer": "charly",
-  "id": "17.54320.3572",
-  "revision": "54320",
+  "id": "1.1.1",
+  "revision": "1",
   "stage1": 3,
   "stage2": 3,
   "stage3": 0,
@@ -54,8 +54,8 @@ read_url_answers = [
   {
   "branch": "trunk",
   "committer": "ben",
-  "id": "17.54321.3573",
-  "revision": "54321",
+  "id": "1.2.2",
+  "revision": "2",
   "stage1": 3,
   "stage2": 3,
   "stage3": 0,
@@ -64,10 +64,10 @@ read_url_answers = [
   {
   "branch": "trunk",
   "committer": "john",
-  "id": "17.54322.3574",
-  "revision": "54322",
-  "stage1": 2,
-  "stage2": 0,
+  "id": "1.3.3",
+  "revision": "3",
+  "stage1": 3,
+  "stage2": 2,
   "stage3": 0,
   "timestamp": "2013-09-06_14:33:17"
   }
@@ -79,7 +79,7 @@ read_url_answers.reverse()
 def do_nothing():
   pass
 
-class IgnorePendingBuildIntegration(unittest.TestCase):
+class StageTwoFailureShootsIntegration(unittest.TestCase):
   def on_shoot(self, value):
     self.times_shot += 1
 

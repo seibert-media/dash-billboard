@@ -82,6 +82,7 @@ import Log
 import Device
 import Config
 import Stalk
+#import Guard
 import CommandSet
 
 def usage():
@@ -90,6 +91,7 @@ def usage():
     print "   commands:"
     print "     stalk - sit around waiting for a Jenkins CI failed build"
     print "             notification, then attack the perpetrator!"
+    print "     guard - sits around and waits for faces(!) to shoot at, needs a camera"
     print ""
     print "     up    - move up <value> milliseconds"
     print "     down  - move down <value> milliseconds"
@@ -107,6 +109,7 @@ def usage():
     print ""
 
 
+
 def main(args):
   if len(args) < 2:
     usage()
@@ -122,14 +125,19 @@ def main(args):
     Stalk.Stalk(device).poll_commit_status()
     # Will never return
     return
-
-  # Process any passed commands or command_sets
-  command = args[1]
-  value = 0
-  if len(args) > 2:
-    value = int(args[2])
-
-  CommandSet.run(device, command, value)
+  elif args[1] == "guard":
+    Log.log("guarding and waiting for faces *muhahahaha* ...")
+    Guard.Guard(device, Config.CAM_DEVICE_INDEX).start()
+    # Will never return
+    return
+  else:
+    # Process any passed commands or command_sets
+    command = args[1]
+    value = 0
+    if len(args) > 2:
+      value = int(args[2])
+    
+    CommandSet.run(device, command, value)
 
 if __name__ == '__main__':
   main(sys.argv)

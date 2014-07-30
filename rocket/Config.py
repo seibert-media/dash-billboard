@@ -52,3 +52,4 @@ DASHBOARD_URL = DASHBOARD_BASE_URL + "/bundle?branch=trunk&limit=10&sort=%5B%7B%
 HTTPAUTH_USER                   = ""
 HTTPAUTH_PASS                   = ""
 
+CAM_DEVICE_INDEX = 2

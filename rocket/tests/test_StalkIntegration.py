@@ -16,7 +16,7 @@ read_url_answers = [
     "id": "15.12345.1775",\
     "revision": "12345",\
     "stage1": 3,\
-    "stage2": 0,\
+    "stage2": 3,\
     "stage3": 0,\
     "timestamp": "2013-07-05_12:33:43"},\
     {"branch": "trunk",\
@@ -24,7 +24,7 @@ read_url_answers = [
     "id": "15.12346.1775",\
     "revision": "12346",\
     "stage1": 2,\
-    "stage2": 0,\
+    "stage2": 2,\
     "stage3": 0,\
     "timestamp": "2013-07-05_12:34:43"}\
     ]}',
@@ -36,7 +36,7 @@ read_url_answers = [
     "id": "15.12347.1775",\
     "revision": "12347",\
     "stage1": 3,\
-    "stage2": 0,\
+    "stage2": 3,\
     "stage3": 0,\
     "timestamp": "2013-07-05_12:33:43"},\
     {"branch": "trunk",\
@@ -44,7 +44,7 @@ read_url_answers = [
     "id": "15.12348.1775",\
     "revision": "12348",\
     "stage1": 2,\
-    "stage2": 0,\
+    "stage2": 2,\
     "stage3": 0,\
     "timestamp": "2013-07-05_12:34:43"}\
     ]}',
@@ -98,4 +98,3 @@ class StalkIntegrationTest(unittest.TestCase):
     self.assertEqual(self.times_shot, 1)
     self.assertEqual(self.reset_called, 1)
 
-  
