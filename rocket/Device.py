@@ -2,8 +2,9 @@
 import Log
 import platform
 import time
-import usb.core
-import usb.util
+import usb
+#import usb.core
+#import usb.util
 
 # Protocol command bytes
 DOWN    = 0x01

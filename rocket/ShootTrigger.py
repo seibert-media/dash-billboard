@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 
 import Log
 import Commit 
@@ -6,7 +7,7 @@ class ShootTrigger:
 
   def __init__(self, callback):
     self.first_update = True
-    self.previously_green = False
+    self.previous_commit = Commit.Commit()
     self.seen_completed_commits = {}
     self.callback = callback
 
@@ -50,22 +51,14 @@ class ShootTrigger:
     self.seen_completed_commits[commit.key()] = True
   
     if last:
-        Log.log("Previously green: "+ str(self.previously_green) +" commit: "+ str(commit.revision) +" stage1: "+ str(commit.stage1) +" stage2: "+ str(commit.stage2))
+        Log.log("Status: "+ self.previous_commit.to_str() +" ➔ "+ commit.to_str())
   
     # If there is a failure detected after a success, shoot
-    if commit.is_success():
-      if not self.previously_green:
-        Log.log("State back to green by commit: "+ str(commit.revision) +" stage1: "+ str(commit.stage1))
-      self.previously_green = True
-  
-    elif self.previously_green and commit.is_failure():
-      self.previously_green = False
-      if last:
-        self.shoot_user(commit.committer)
-  
-    if last:
-      Log.log("Next state green: "+ str(self.previously_green) +" commit: "+ str(commit.revision) +" stage1: "+ str(commit.stage1) +" stage2: "+ str(commit.stage2))
+    if commit.is_worse_than(self.previous_commit) and last:
+      self.shoot_user(commit.committer)
 
+    self.previous_commit = commit
+ 
   def update(self, commits):
     # Uncomment for more debug information
     # Log.log("got a response with "+ str(len(commits)) + " commits.")

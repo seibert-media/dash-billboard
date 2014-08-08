@@ -55,3 +55,10 @@ class CommitTest(unittest.TestCase):
     commit = Commit.Commit('trunk', '15.12345.1775', '12345', 'john', Commit.STATUS_SUCCESS, Commit.STATUS_SUCCESS, Commit.STATUS_UNKOWN, '2013-07-05_12:03:01')
     self.assertTrue(commit.is_complete());
 
+  def test_empty(self):
+    commit = Commit.Commit()
+    self.assertEqual(commit.stage1, Commit.STATUS_UNKOWN);
+    self.assertEqual(commit.stage2, Commit.STATUS_UNKOWN);
+    self.assertEqual(commit.stage3, Commit.STATUS_UNKOWN);
+    self.assertFalse(commit.is_complete());
+

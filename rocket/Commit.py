@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 
 from datetime import datetime
 
@@ -44,8 +45,18 @@ STATUS_SUCCESS  = 3
 STATUS_BUILDING = 1
 STATUS_UNKOWN   = 0
 
+STATUS_NAMES = {
+  STATUS_FAIL 	  : "✗",
+  STATUS_SUCCESS  : "✓",
+  STATUS_BUILDING : "⌛",
+  STATUS_UNKOWN   : "?"
+}
+
+def stage_to_str(status):
+  return STATUS_NAMES[status]
+
 class Commit:
-  def __init__(self, branch, bundle, revision, committer, stage1, stage2, stage3, timestamp):
+  def __init__(self, branch = None, bundle = None, revision = None, committer = None, stage1 = STATUS_UNKOWN, stage2 = STATUS_UNKOWN, stage3 = STATUS_UNKOWN, timestamp = None):
     self.branch    = branch
     self.bundle    = bundle
     self.revision  = revision
@@ -54,11 +65,23 @@ class Commit:
     self.stage2    = stage2
     self.stage3    = stage3
     self.timestamp = timestamp
-    self.datetime  = datetime.strptime(timestamp, "%Y-%m-%d_%H:%M:%S")
+    if (timestamp != None):
+      self.datetime = datetime.strptime(timestamp, "%Y-%m-%d_%H:%M:%S")
+    else:
+      self.datetime = None
 
   def key(self):
     # There may be multiple test runs for a revision
     return self.revision + self.timestamp
+
+  def is_worse_than(self, other):
+    if (self.stage1 == STATUS_SUCCESS and self.stage2 == STATUS_SUCCESS):
+       return False
+    elif (self.stage1 == STATUS_FAIL and other.stage1 == STATUS_SUCCESS):
+       return True
+    elif (self.stage2 == STATUS_FAIL and other.stage2 == STATUS_SUCCESS):
+       return True
+    return False
 
   def is_success(self):
     return self.stage1 == STATUS_SUCCESS and self.stage2 == STATUS_SUCCESS
@@ -74,4 +97,8 @@ class Commit:
 
   def is_complete(self):
     return self.stage1 == STATUS_FAIL or (self.stage1 == STATUS_SUCCESS and (self.stage2 == STATUS_FAIL or self.stage2 == STATUS_SUCCESS))
+
+  def to_str(self):
+    return "Commit["+ self.revision +" ("+ stage_to_str(self.stage1) + stage_to_str(self.stage2) + stage_to_str(self.stage3) +")]"
+
   

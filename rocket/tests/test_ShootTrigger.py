@@ -126,3 +126,14 @@ class ShootTriggerTest(unittest.TestCase):
     self.assertEqual(filtered[0].bundle, "1.1.1");
     self.assertEqual(len(filtered), 1);
   
+  def test_stage2_failure_followed_by_stage1_failure_shoots(self):
+    self.shootTrigger.handle_commits([
+      Commit.Commit('trunk', '15.12345.1775', '12345', 'john',   Commit.STATUS_SUCCESS,  Commit.STATUS_FAIL, Commit.STATUS_UNKOWN, '2013-07-05_12:33:43'),
+    ], True);
+    self.shootTrigger.handle_commits([
+      Commit.Commit('trunk', '15.12346.1775', '12346', 'beth',   Commit.STATUS_FAIL,  Commit.STATUS_UNKOWN, Commit.STATUS_UNKOWN, '2013-07-05_12:34:43'),
+    ]);
+    self.assertEqual(len(self.shot_users), 1)
+    self.assertEqual(self.shot_users[0], 'beth')
+
+
